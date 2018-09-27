@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './App.css'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import Bar from './components/Bar'
+const cc = require('cryptocompare')
 
 const AppLayout = styled.div`
   padding: 40px;
@@ -15,7 +16,7 @@ const checkFirstVisit = () => {
   if (!cryptoDashData) {
     return {
       firstVisit: true,
-      page: 'settings'
+      page: 'settings',
     }
   }
 
@@ -25,7 +26,7 @@ const checkFirstVisit = () => {
 class App extends Component {
 
   state = {
-    page: 'dashboard',
+    page: 'settings',
     ...checkFirstVisit()
   }
 
@@ -50,13 +51,33 @@ class App extends Component {
     </div>
   )
 
+  loadingContent = () => (
+    !this.state.coinsList ? <div>Loading coins...</div> : false
+  )
+
+  fetchCoins = async () => {
+    try {
+      const coinsList = (await cc.coinList()).Data
+      this.setState({ coinsList: coinsList })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  componentDidMount = () => {
+    this.fetchCoins()
+  }
+
   render() {
     return (  
       <AppLayout>
         { Bar.call(this) }
-        <Content>
-          { this.displayingSettings() && this.settingsContent() }
-        </Content>
+
+        {this.loadingContent() ||
+          <Content>
+            { this.displayingSettings() && this.settingsContent() }
+          </Content>}
+
       </AppLayout>
     )
   }
