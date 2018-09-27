@@ -33,7 +33,8 @@ class App extends Component {
 
   state = {
     page: 'settings',
-    ...checkFirstVisit()
+    favorites: ['ETH', 'BTC', 'XMR', 'EOS', 'DOGE'],
+    ...checkFirstVisit(),
   }
 
   displayingDashboard = () => this.state.page === 'dashboard'
@@ -55,6 +56,7 @@ class App extends Component {
         Confirm Favorites
       </div>
       <div>
+        { CoinList.call(this, true) }
         { CoinList.call(this) }
       </div>
     </div>
