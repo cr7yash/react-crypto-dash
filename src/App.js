@@ -7,6 +7,7 @@ import CoinList from './components/CoinList'
 
 // Libs
 import styled from 'styled-components'
+import _ from 'lodash'
 const cc = require('cryptocompare')
 
 
@@ -52,8 +53,9 @@ class App extends Component {
     this.setState({ firstVisit: false, page: 'dashboard' })
   }
 
+  isInFavorites = coinKey => _.includes(this.state.favorites, coinKey)
+
   addCoinToFavorites = (coinKey) => {
-    console.log('add', coinKey)
     let favorites = [...this.state.favorites]
     if (favorites.length < MAX_FAVORITES) {
       favorites.push(coinKey)
@@ -62,7 +64,9 @@ class App extends Component {
   }
 
   removeCoinToFavorites = (coinKey) => {
-    console.log('remove', coinKey)
+    let favorites = [...this.state.favorites]
+    _.pull(favorites, coinKey)
+    this.setState({ favorites  })
   }
 
   settingsContent = () => (
