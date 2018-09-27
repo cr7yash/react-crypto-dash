@@ -36,8 +36,15 @@ const CoinHeaderGrid = styled.div`
   grid-template-columns: 1fr 1fr;
 `
 
-const CoinSymbol =  styled.div`
+const CoinSymbol = styled.div`
   justify-self: right;
+`
+
+const DeleteIcon = styled.div`
+  justify-self: right;
+  ${CoinTile}:hover & {
+    color: red;
+  }
 `
 
 export default function (favorites = false) {
@@ -53,7 +60,9 @@ export default function (favorites = false) {
 
           <CoinHeaderGrid>
             <div>{ this.state.coinList[coinKey].CoinName }</div>
-            <CoinSymbol>{ this.state.coinList[coinKey].Symbol }</CoinSymbol>
+            {favorites ?
+              <DeleteIcon>X</DeleteIcon> :
+              <CoinSymbol>{ this.state.coinList[coinKey].Symbol }</CoinSymbol>}
           </CoinHeaderGrid>
 
           <img style={{height: '50px'}} src={`http://cryptocompare.com/${this.state.coinList[coinKey].ImageUrl}`} alt={this.state.coinList[coinKey].CoinName} />
