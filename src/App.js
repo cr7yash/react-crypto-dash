@@ -29,6 +29,8 @@ const checkFirstVisit = () => {
   return {}
 }
 
+const MAX_FAVORITES = 10
+
 class App extends Component {
 
   state = {
@@ -36,6 +38,7 @@ class App extends Component {
     favorites: ['ETH', 'BTC', 'XMR', 'EOS', 'DOGE'],
     ...checkFirstVisit(),
   }
+
 
   displayingDashboard = () => this.state.page === 'dashboard'
   displayingSettings  = () => this.state.page === 'settings'
@@ -47,6 +50,19 @@ class App extends Component {
   confirmFavorites = () => {
     localStorage.setItem('cryptoDash', 'true')
     this.setState({ firstVisit: false, page: 'dashboard' })
+  }
+
+  addCoinToFavorites = (coinKey) => {
+    console.log('add', coinKey)
+    let favorites = [...this.state.favorites]
+    if (favorites.length < MAX_FAVORITES) {
+      favorites.push(coinKey)
+      this.setState({ favorites })
+    }
+  }
+
+  removeCoinToFavorites = (coinKey) => {
+    console.log('remove', coinKey)
   }
 
   settingsContent = () => (

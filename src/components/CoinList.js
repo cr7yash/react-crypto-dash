@@ -39,13 +39,18 @@ export default function (favorites = false) {
   const coinKeys = favorites ? this.state.favorites : Object.keys(this.state.coinList).slice(0, 50)
   return (
     <CoinGrid>
-      {coinKeys.map(coin => (
-        <CoinTile favorite={favorites} key={coin}>
+      {coinKeys.map(coinKey => (
+        <CoinTile 
+          favorite={favorites} 
+          key={coinKey} 
+          onClick={favorites ? () => this.removeCoinToFavorites(coinKey) : () => this.addCoinToFavorites(coinKey)}>
+
           <CoinHeaderGrid>
-            <div>{ this.state.coinList[coin].CoinName }</div>
-            <CoinSymbol>{ this.state.coinList[coin].Symbol }</CoinSymbol>
+            <div>{ this.state.coinList[coinKey].CoinName }</div>
+            <CoinSymbol>{ this.state.coinList[coinKey].Symbol }</CoinSymbol>
           </CoinHeaderGrid>
-          <img style={{height: '50px'}} src={`http://cryptocompare.com/${this.state.coinList[coin].ImageUrl}`} alt={this.state.coinList[coin].CoinName} />
+
+          <img style={{height: '50px'}} src={`http://cryptocompare.com/${this.state.coinList[coinKey].ImageUrl}`} alt={this.state.coinList[coinKey].CoinName} />
         </CoinTile>
       ))}
     </CoinGrid>
