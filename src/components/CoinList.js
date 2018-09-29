@@ -42,7 +42,9 @@ const CoinSymbol = styled.div`
 
 const DeleteIcon = styled.div`
   justify-self: right;
+  display: none;
   ${CoinTile}:hover & {
+    display: block;
     color: red;
   }
 `
