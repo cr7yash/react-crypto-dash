@@ -49,7 +49,9 @@ class App extends Component {
   )
 
   confirmFavorites = () => {
-    localStorage.setItem('cryptoDash', 'true')
+    localStorage.setItem('cryptoDash', JSON.stringify({
+      favorites: this.state.favorites
+    }))
     this.setState({ firstVisit: false, page: 'dashboard' })
   }
 
