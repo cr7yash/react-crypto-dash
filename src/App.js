@@ -4,15 +4,22 @@ import './App.css'
 // Components
 import Bar from './components/Bar'
 import CoinList from './components/CoinList'
+import Search from './components/Search'
 
 // Libs
 import styled from 'styled-components'
 import _ from 'lodash'
+import { ConfirmButton } from './styles/ConfirmButton';
 const cc = require('cryptocompare')
 
 
 const AppLayout = styled.div`
   padding: 40px;
+`
+
+const CenterDiv = styled.div`
+  display: grid;
+  justify-content: center;
 `
 
 const Content = styled.div`
@@ -74,11 +81,14 @@ class App extends Component {
   settingsContent = () => (
     <div>
       { this.firstVisitMessage() }
-      <div onClick={this.confirmFavorites}>
-        Confirm Favorites
-      </div>
       <div>
         { CoinList.call(this, true) }
+        <CenterDiv>
+          <ConfirmButton onClick={this.confirmFavorites}>
+              Confirm Favorites
+          </ConfirmButton>
+        </CenterDiv>
+        { Search.call(this) }
         { CoinList.call(this) }
       </div>
     </div>
