@@ -1,11 +1,12 @@
 import React from 'react'
 import { CoinGrid, CoinTile, CoinHeaderGrid, CoinSymbol } from './CoinList'
 import styled, { css } from 'styled-components'
-import { fontSizeBig, fontSize3, subtleBoxShadow, lightBlueBackground } from '../styles/Styles';
+import {
+  fontSizeBig, fontSize3, subtleBoxShadow, lightBlueBackground, bgColor2, fontSize2 } from '../styles/Styles';
 
 import highchartsConfig from '../config/Highchart'
 import highchartTheme from '../styles/HighchartsTheme'
-const ReactHighcharts = require('react-highcharts')
+import * as ReactHighcharts from 'react-highcharts'
 
 ReactHighcharts.Highcharts.setOptions(highchartTheme)
 
@@ -46,6 +47,19 @@ const ChartGrid = styled.div`
 const DashboardFavoriteName = styled.h2`
   margin: 0 0 10px 0;
 `
+
+const ChartSelect = styled.select`
+  width: 100px;
+  ${bgColor2}
+  color: #1163c9;
+  border: 1px solid;
+  ${fontSize2}
+  margin: 5px;
+  height: 25px;
+  outline: none;
+  float: right;
+`
+
 
 export default function () {
   const self = this
@@ -100,8 +114,15 @@ export default function () {
         <DashboardFavoriteName>{ this.state.currentFavorite && this.state.coinList[this.state.currentFavorite].CoinName }</DashboardFavoriteName>
         <img style={{ height: '200px' }} src={this.state.currentFavorite && `http://cryptocompare.com/${this.state.coinList[this.state.currentFavorite].ImageUrl}`} alt={this.state.currentFavorite && this.state.coinList[this.state.currentFavorite].CoinName} />
       </PaddingBlue>
-
       <PaddingBlue>
+        <ChartSelect onChange={async e => {
+          await this.setState({ chartIntervalTime: e.target.value, historical: null })
+          this.fetchHistorical()
+        }}>
+          <option value="days">Days</option>
+          <option value="weeks">Weeks</option>
+          <option selected value="months">Months</option>
+        </ChartSelect>
         {this.state.historical ? <ReactHighcharts config={highchartsConfig.call(this)} /> : <div>Loading historical data...</div>}
       </PaddingBlue>
     </ChartGrid>

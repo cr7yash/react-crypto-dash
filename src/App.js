@@ -14,7 +14,7 @@ import moment from 'moment'
 
 import { ConfirmButton } from './styles/ConfirmButton';
 
-const cc = require('cryptocompare')
+import * as cc from 'cryptocompare'
 
 
 const AppLayout = styled.div`
@@ -55,6 +55,7 @@ class App extends Component {
     page: 'settings',
     favorites: ['ETH', 'BTC', 'XMR', 'EOS', 'DOGE'],
     filteredCoins: false,
+    chartIntervalTime: 'months',
     ...checkFirstVisit(),
   }
 
@@ -146,7 +147,7 @@ class App extends Component {
   historical = () => {
     let promises = []
     for (let units = TIME_UNITS; units > 0; units--) {
-      promises.push(cc.priceHistorical(this.state.currentFavorite, ['USD'], moment().subtract({months: units}).toDate() ))
+      promises.push(cc.priceHistorical(this.state.currentFavorite, ['USD'], moment().subtract({ [this.state.chartIntervalTime]: units}).toDate() ))
     }
     return Promise.all(promises)
   }
@@ -165,7 +166,7 @@ class App extends Component {
     const res = await this.historical()
     const historical = [{
       name: this.state.currentFavorite,
-      data: res.map((coin, index) => [moment().subtract({ months: TIME_UNITS - index }).valueOf(), coin.USD])
+      data: res.map((coin, index) => [moment().subtract({ [this.state.chartIntervalTime]: TIME_UNITS - index }).valueOf(), coin.USD])
     }]
     this.setState({ historical })
   }
