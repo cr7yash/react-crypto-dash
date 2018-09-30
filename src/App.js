@@ -59,6 +59,14 @@ class App extends Component {
     ...checkFirstVisit(),
   }
 
+  validateFavorites = (coinList) => {
+    let validatedFavorites = []
+    this.state.favorites.forEach(favorite => {
+      if (coinList[favorite])
+        validatedFavorites.push(favorite)
+    })
+    return validatedFavorites
+  }
 
   displayingDashboard = () => this.state.page === 'dashboard'
   displayingSettings  = () => this.state.page === 'settings'
@@ -155,7 +163,8 @@ class App extends Component {
   prices = () => {
     let promises = []
     this.state.favorites.forEach(sym => {
-      promises.push(cc.priceFull(sym, 'USD'))
+      if (this.state.coinList[sym])
+        promises.push(cc.priceFull(sym, 'USD'))
     })
     return Promise.all(promises)
   }
@@ -186,14 +195,14 @@ class App extends Component {
   fetchCoins = async () => {
     try {
       const coinList = (await cc.coinList()).Data
-      this.setState({ coinList: coinList })
+      this.setState({ coinList, favorites: this.validateFavorites(coinList) })
     } catch (error) {
       console.log(error)
     }
   }
 
-  componentDidMount = () => {
-    this.fetchCoins()
+  componentDidMount = async () => {
+    await this.fetchCoins()
     this.fetchPrices()
     this.fetchHistorical()
   }

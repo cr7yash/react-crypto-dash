@@ -115,13 +115,15 @@ export default function () {
         <img style={{ height: '200px' }} src={this.state.currentFavorite && `http://cryptocompare.com/${this.state.coinList[this.state.currentFavorite].ImageUrl}`} alt={this.state.currentFavorite && this.state.coinList[this.state.currentFavorite].CoinName} />
       </PaddingBlue>
       <PaddingBlue>
-        <ChartSelect onChange={async e => {
-          await this.setState({ chartIntervalTime: e.target.value, historical: null })
-          this.fetchHistorical()
-        }}>
+        <ChartSelect
+          defaultValue="months"
+          onChange={async e => {
+            await this.setState({ chartIntervalTime: e.target.value, historical: null })
+            this.fetchHistorical()
+          }}>
           <option value="days">Days</option>
           <option value="weeks">Weeks</option>
-          <option selected value="months">Months</option>
+          <option value="months">Months</option>
         </ChartSelect>
         {this.state.historical ? <ReactHighcharts config={highchartsConfig.call(this)} /> : <div>Loading historical data...</div>}
       </PaddingBlue>
