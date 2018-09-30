@@ -119,7 +119,7 @@ class App extends Component {
     if (!this.state.coinList)
       return <div>Loading coins...</div>
 
-    if (!this.state.prices)
+    if (!this.state.firstVisit && !this.state.prices)
       return <div>Loading prices...</div>
   }
 
@@ -160,17 +160,19 @@ class App extends Component {
   }
 
   fetchHistorical = async () => {
-    if (this.state.currentFavorite) {
-      const res = await this.historical()
-      const historical = [{
-        name: this.state.currentFavorite,
-        data: res.map((coin, index) => [moment().subtract({ months: TIME_UNITS - index }).valueOf(), coin.USD])
-      }]
-      this.setState({ historical })
-    }
+    if (this.state.firstVisit) return;
+
+    const res = await this.historical()
+    const historical = [{
+      name: this.state.currentFavorite,
+      data: res.map((coin, index) => [moment().subtract({ months: TIME_UNITS - index }).valueOf(), coin.USD])
+    }]
+    this.setState({ historical })
   }
 
   fetchPrices = async () => {
+    if (this.state.firstVisit) return;
+
     let prices
     try {
       prices = await this.prices()
