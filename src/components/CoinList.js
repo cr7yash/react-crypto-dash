@@ -5,6 +5,9 @@ import { subtleBoxShadow, greenBoxShadow, lightBlueBackground, redBoxShadow } fr
 const CoinGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  ${props => props.count && css`
+    grid-template-columns: repeat(${props.count < 5 ? props.count : 5}, 1fr);
+  `}
   grid-gap: 15px;
   margin-top: 40px;
 `
@@ -54,7 +57,7 @@ export default function (favorites = false) {
     this.state.favorites :
     (this.state.filteredCoins ? Object.keys(this.state.filteredCoins) : Object.keys(this.state.coinList).slice(0, 50))
   return (
-    <CoinGrid>
+    <CoinGrid count={favorites && this.state.favorites.length}>
       {coinKeys.map(coinKey => (
         <CoinTile 
           favorite={favorites}
