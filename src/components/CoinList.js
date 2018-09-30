@@ -50,7 +50,9 @@ const DeleteIcon = styled.div`
 `
 
 export default function (favorites = false) {
-  const coinKeys = favorites ? this.state.favorites : Object.keys(this.state.coinList).slice(0, 50)
+  const coinKeys = favorites ? 
+    this.state.favorites :
+    (this.state.filteredCoins ? Object.keys(this.state.filteredCoins) : Object.keys(this.state.coinList).slice(0, 50))
   return (
     <CoinGrid>
       {coinKeys.map(coinKey => (

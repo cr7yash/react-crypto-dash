@@ -44,6 +44,7 @@ class App extends Component {
   state = {
     page: 'settings',
     favorites: ['ETH', 'BTC', 'XMR', 'EOS', 'DOGE'],
+    filteredCoins: false,
     ...checkFirstVisit(),
   }
 
@@ -97,6 +98,26 @@ class App extends Component {
   loadingContent = () => (
     !this.state.coinList ? <div>Loading coins...</div> : false
   )
+
+  handleFilter = _.debounce((inputValue) => {
+    const regex = new RegExp(inputValue.trim(), 'i')
+    const filteredCoins = {}
+    for (let coinSymbol in this.state.coinList) {
+      const coin = this.state.coinList[coinSymbol]
+      if (regex.test(coin.CoinName) || regex.test(coin.Symbol)) {
+        filteredCoins[coinSymbol] = coin
+      }
+    }
+    this.setState({ filteredCoins })
+  }, 500)
+
+  filterCoins = (e) => {
+    const inputValue = _.get(e, 'target.value')
+    if (inputValue)
+      this.handleFilter(inputValue)
+    else
+      this.setState({ filteredCoins: false })
+  }
 
   fetchCoins = async () => {
     try {
