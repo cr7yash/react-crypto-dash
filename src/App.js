@@ -5,6 +5,7 @@ import './App.css'
 import Bar from './components/Bar'
 import CoinList from './components/CoinList'
 import Search from './components/Search'
+import Dashboard from './components/Dashboard'
 
 // Libs
 import styled from 'styled-components'
@@ -26,7 +27,7 @@ const Content = styled.div`
 `
 
 const checkFirstVisit = () => {
-  const cryptoDashData = localStorage.getItem('cryptoDash')
+  const cryptoDashData = JSON.parse(localStorage.getItem('cryptoDash'))
   if (!cryptoDashData) {
     return {
       firstVisit: true,
@@ -34,7 +35,9 @@ const checkFirstVisit = () => {
     }
   }
 
-  return {}
+  return {
+    favorites: cryptoDashData.favorites
+  }
 }
 
 const MAX_FAVORITES = 10
@@ -60,7 +63,12 @@ class App extends Component {
     localStorage.setItem('cryptoDash', JSON.stringify({
       favorites: this.state.favorites
     }))
-    this.setState({ firstVisit: false, page: 'dashboard' })
+    this.setState({
+      firstVisit: false,
+      page: 'dashboard',
+      prices: null
+    })
+    this.fetchPrices()
   }
 
   isInFavorites = coinKey => _.includes(this.state.favorites, coinKey)
@@ -95,9 +103,13 @@ class App extends Component {
     </div>
   )
 
-  loadingContent = () => (
-    !this.state.coinList ? <div>Loading coins...</div> : false
-  )
+  loadingContent = () => {
+    if (!this.state.coinList)
+      return <div>Loading coins...</div>
+
+    if (!this.state.prices)
+      return <div>Loading prices...</div>
+  }
 
   handleFilter = _.debounce((inputValue) => {
     const regex = new RegExp(inputValue.trim(), 'i')
@@ -119,6 +131,25 @@ class App extends Component {
       this.setState({ filteredCoins: false })
   }
 
+  prices = () => {
+    let promises = []
+    this.state.favorites.forEach(sym => {
+      promises.push(cc.priceFull(sym, 'USD'))
+    })
+    return Promise.all(promises)
+  }
+
+  fetchPrices = async () => {
+    let prices
+    try {
+      prices = await this.prices()
+    } catch (error) {
+      this.setState({ error: true })
+    }
+    console.log(prices)
+    this.setState({ prices })
+  }
+
   fetchCoins = async () => {
     try {
       const coinList = (await cc.coinList()).Data
@@ -130,6 +161,7 @@ class App extends Component {
 
   componentDidMount = () => {
     this.fetchCoins()
+    this.fetchPrices()
   }
 
   render() {
@@ -140,6 +172,7 @@ class App extends Component {
         {this.loadingContent() ||
           <Content>
             { this.displayingSettings() && this.settingsContent() }
+            { this.displayingDashboard() && Dashboard.call(this) }
           </Content>}
 
       </AppLayout>
