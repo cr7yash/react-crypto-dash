@@ -4,7 +4,7 @@ export const lightTheme = theme === 'light';
 
 export const color = lightTheme ? 'white' : '#061a44';
 export const color2 = lightTheme ? 'white' : '#010e2c';
-export const color3 = lightTheme ? '#09f010' : '#42ff3a';
+export const color3 = lightTheme ? '#053c18' : '#42ff3a';
 
 if (lightTheme) {
   document.body.style.background = '#e1eaee';

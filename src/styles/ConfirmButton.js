@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { fontSize1, greenBoxShadow } from './Styles';
+import { fontSize1, greenBoxShadow, color3 } from './Styles';
 
 export const ConfirmButton = styled.button`
   margin: 20px;
@@ -8,7 +8,7 @@ export const ConfirmButton = styled.button`
   font-family: 'Exo 2', sans-serif;
   padding: 5px;
   background-color: transparent;
-  color: #42ff3a !important;
+  color: ${color3};
   border: none;
   padding: 10px 30px;
   &:hover {
