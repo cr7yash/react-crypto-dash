@@ -14,6 +14,10 @@ export default function () {
       height: '400px'
     },
 
+    xAxis: {
+      type: 'datetime'
+    },
+
     yAxis: {
       title: {
         text: 'Price'
@@ -35,10 +39,7 @@ export default function () {
       }
     },
 
-    series: [{
-      name: 'Installation',
-      data: [1, 2, 3, 4, 5, 6, 7, 8]
-    }],
+    series: this.state.historical,
 
     responsive: {
       rules: [{

@@ -50,12 +50,13 @@ const DashboardFavoriteName = styled.h2`
 export default function () {
   const self = this
   
-  const updateCurrentFavorite = sym => {
-    this.setState({ currentFavorite: sym })
+  const updateCurrentFavorite = async sym => {
+    await this.setState({ currentFavorite: sym, historical: null })
     localStorage.setItem('cryptoDash', JSON.stringify({
       ...JSON.parse(localStorage.getItem('cryptoDash')),
       currentFavorite: sym
     }))
+    this.fetchHistorical()
   }
 
   return [
@@ -96,12 +97,12 @@ export default function () {
     </CoinGrid>,
     <ChartGrid key={'chart-grid'}>
       <PaddingBlue>
-        <DashboardFavoriteName>{ this.state.coinList[this.state.currentFavorite].CoinName }</DashboardFavoriteName>
+        <DashboardFavoriteName>{ this.state.currentFavorite && this.state.coinList[this.state.currentFavorite].CoinName }</DashboardFavoriteName>
         <img style={{ height: '200px' }} src={`http://cryptocompare.com/${this.state.coinList[this.state.currentFavorite].ImageUrl}`} alt={this.state.coinList[this.state.currentFavorite].CoinName} />
       </PaddingBlue>
 
       <PaddingBlue>
-        <ReactHighcharts config={highchartsConfig.call(this)} />
+        {this.state.historical ? <ReactHighcharts config={highchartsConfig.call(this)} /> : <div>Loading historical data...</div>}
       </PaddingBlue>
     </ChartGrid>
   ]

@@ -10,7 +10,10 @@ import Dashboard from './components/Dashboard'
 // Libs
 import styled from 'styled-components'
 import _ from 'lodash'
+import moment from 'moment'
+
 import { ConfirmButton } from './styles/ConfirmButton';
+
 const cc = require('cryptocompare')
 
 
@@ -44,6 +47,7 @@ const checkFirstVisit = () => {
 }
 
 const MAX_FAVORITES = 10
+const TIME_UNITS = 10
 
 class App extends Component {
 
@@ -62,19 +66,21 @@ class App extends Component {
     this.state.firstVisit ? <div>Welcome to CryptoDash, please select your favorite coins to begin.</div> : false
   )
 
-  confirmFavorites = () => {
+  confirmFavorites = async () => {
     let currentFavorite = this.state.favorites[0];
     localStorage.setItem('cryptoDash', JSON.stringify({
       favorites: this.state.favorites,
       currentFavorite
     }))
-    this.setState({
+    await this.setState({
       firstVisit: false,
       page: 'dashboard',
       prices: null,
-      currentFavorite
+      historical: null,
+      currentFavorite,
     })
     this.fetchPrices()
+    this.fetchHistorical()
   }
 
   isInFavorites = coinKey => _.includes(this.state.favorites, coinKey)
@@ -137,12 +143,31 @@ class App extends Component {
       this.setState({ filteredCoins: false })
   }
 
+  historical = () => {
+    let promises = []
+    for (let units = TIME_UNITS; units > 0; units--) {
+      promises.push(cc.priceHistorical(this.state.currentFavorite, ['USD'], moment().subtract({months: units}).toDate() ))
+    }
+    return Promise.all(promises)
+  }
+
   prices = () => {
     let promises = []
     this.state.favorites.forEach(sym => {
       promises.push(cc.priceFull(sym, 'USD'))
     })
     return Promise.all(promises)
+  }
+
+  fetchHistorical = async () => {
+    if (this.state.currentFavorite) {
+      const res = await this.historical()
+      const historical = [{
+        name: this.state.currentFavorite,
+        data: res.map((coin, index) => [moment().subtract({ months: TIME_UNITS - index }).valueOf(), coin.USD])
+      }]
+      this.setState({ historical })
+    }
   }
 
   fetchPrices = async () => {
@@ -152,7 +177,6 @@ class App extends Component {
     } catch (error) {
       this.setState({ error: true })
     }
-    console.log(prices)
     this.setState({ prices })
   }
 
@@ -168,6 +192,7 @@ class App extends Component {
   componentDidMount = () => {
     this.fetchCoins()
     this.fetchPrices()
+    this.fetchHistorical()
   }
 
   render() {
