@@ -3,6 +3,12 @@ import { CoinGrid, CoinTile, CoinHeaderGrid, CoinSymbol } from './CoinList'
 import styled, { css } from 'styled-components'
 import { fontSizeBig, fontSize3, subtleBoxShadow, lightBlueBackground } from '../styles/Styles';
 
+import highchartsConfig from '../config/Highchart'
+import highchartTheme from '../styles/HighchartsTheme'
+const ReactHighcharts = require('react-highcharts')
+
+ReactHighcharts.Highcharts.setOptions(highchartTheme())
+
 const numberFormat = number => +(number + '').slice(0, 7)
 
 const ChangePct = styled.div`
@@ -40,8 +46,6 @@ const ChartGrid = styled.div`
 const DashboardFavoriteName = styled.h2`
   margin: 0 0 10px 0;
 `
-
-
 
 export default function () {
   const self = this
@@ -97,7 +101,7 @@ export default function () {
       </PaddingBlue>
 
       <PaddingBlue>
-        Chart goes here...
+        <ReactHighcharts config={highchartsConfig.call(this)} />
       </PaddingBlue>
     </ChartGrid>
   ]
