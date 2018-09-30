@@ -28,6 +28,13 @@ export const CoinTile = styled.div`
     }
   `}
 
+  ${props => props.dashboardFavorite && css`
+    ${greenBoxShadow}
+    &:hover {
+      pointer-events: none;
+    }
+  `}
+
   ${props => props.chosen && !props.favorite && css`
     pointer-events: none;
     opacity: 0.4;
