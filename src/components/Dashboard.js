@@ -98,7 +98,7 @@ export default function () {
     <ChartGrid key={'chart-grid'}>
       <PaddingBlue>
         <DashboardFavoriteName>{ this.state.currentFavorite && this.state.coinList[this.state.currentFavorite].CoinName }</DashboardFavoriteName>
-        <img style={{ height: '200px' }} src={`http://cryptocompare.com/${this.state.coinList[this.state.currentFavorite].ImageUrl}`} alt={this.state.coinList[this.state.currentFavorite].CoinName} />
+        <img style={{ height: '200px' }} src={this.state.currentFavorite && `http://cryptocompare.com/${this.state.coinList[this.state.currentFavorite].ImageUrl}`} alt={this.state.currentFavorite && this.state.coinList[this.state.currentFavorite].CoinName} />
       </PaddingBlue>
 
       <PaddingBlue>
