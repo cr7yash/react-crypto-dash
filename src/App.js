@@ -44,7 +44,7 @@ const checkFirstVisit = () => {
   };
 };
 
-const MAX_FAVORITES = 10;
+const MAX_FAVORITES = 5;
 const TIME_UNITS = 10;
 
 class App extends Component {
